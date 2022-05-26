@@ -1,5 +1,9 @@
 import { ethers } from 'ethers';
-import { ConnectionStatus, IWalletProvider } from '../types/ProviderTypes';
+import {
+  ConnectionStatus,
+  IChangeNetworkParams,
+  IWalletProvider,
+} from '../types/ProviderTypes';
 export class Ethers implements IWalletProvider {
   public static provider: ethers.providers.Web3Provider | null = null;
   public accounts: string[] = [];
@@ -70,6 +74,33 @@ export class Ethers implements IWalletProvider {
     }
 
     return accounts;
+  }
+
+  public async changeNetwork(
+    chainId: string,
+    createParams: IChangeNetworkParams[]
+  ) {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId }],
+      });
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      //@ts-ignore
+      if (switchError.code === 4902) {
+        try {
+          // then lets add it
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [...createParams],
+          });
+        } catch (addError) {
+          // handle "add" error
+          console.log(addError);
+        }
+      }
+    }
   }
 }
 
