@@ -120,17 +120,9 @@ export class Ethers implements IWalletProvider {
     }
   }
 
-  public async isTransactionComplete(
-    transactionHash: string
-  ): Promise<boolean> {
-    const txReceipt = await Ethers.provider?.getTransactionReceipt(
-      transactionHash
-    );
-    if (txReceipt?.blockNumber) {
-      return txReceipt !== undefined;
-    }
-
-    return false;
+  public async getNetwork(): Promise<number> {
+    const { chainId } = await Ethers.provider?.getNetwork()!;
+    return chainId;
   }
 }
 

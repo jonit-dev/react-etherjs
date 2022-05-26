@@ -16,6 +16,7 @@ export const App: React.FC = () => {
   const [currentAccount, setCurrentAccount] = useState<string>();
   const [numberToStore, setNumberToStore] = useState<number>(0);
   const [retrievedNumber, setRetrievedNumber] = useState<number>();
+  const [networkId, setNetworkId] = useState<number>();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -30,8 +31,17 @@ export const App: React.FC = () => {
     }
   };
 
+  const getNetworkId = async () => {
+    const chainId = await ethersProvider?.getNetwork();
+    setNetworkId(chainId);
+  };
+
   useEffect(() => {
     checkConnectionStatus();
+
+    if (ethersProvider) {
+      getNetworkId();
+    }
   }, [ethersProvider]);
 
   const onProviderConnect = async () => {
@@ -126,6 +136,9 @@ export const App: React.FC = () => {
         </li>
         <li>
           <b>Current account:</b> {currentAccount}
+        </li>
+        <li>
+          <b>Current chainId: </b> {networkId}
         </li>
       </ul>
 
