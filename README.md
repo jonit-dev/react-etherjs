@@ -12,7 +12,18 @@ Check our example folder for a detailed usage.
 
 ### useContract
 
-### Troubleshooting
+### FAQ
+
+#### How do I wait for a transaction to be mined (completed)?
+
+- You should use the tx.wait() method to wait for it to be mined. Note that this only works for transactions that performs a write operation. For read only operation, you just use the regular async await syntax.
+
+```
+ setIsLoading(true);
+ const tx = await storageContract.store(numberToStore);
+ await tx.wait();
+ setIsLoading(false);
+```
 
 #### "call revert exception" when calling contract method
 

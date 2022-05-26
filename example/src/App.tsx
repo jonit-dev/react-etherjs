@@ -55,7 +55,8 @@ export const App: React.FC = () => {
     try {
       if (storageContract) {
         setIsLoading(true);
-        await storageContract.store(numberToStore);
+        const tx = await storageContract.store(numberToStore);
+        await tx.wait();
         setIsLoading(false);
       } else {
         throw new Error('Contract is not loaded!');
@@ -70,8 +71,7 @@ export const App: React.FC = () => {
     if (storageContract) {
       setIsLoading(true);
       const tx = await storageContract.retrieve();
-      console.log(storageContract);
-      await tx.wait();
+
       setRetrievedNumber(Number(tx));
       setIsLoading(false);
     } else {
@@ -154,9 +154,15 @@ export const App: React.FC = () => {
             </li>
             <br />
             <li>
-              <strong>Retrieved number:</strong> {retrievedNumber}
-              <br />
-              <button onClick={onRetrieveNumber}>Retrieve</button>
+              {isLoading ? (
+                'Processing transaction...'
+              ) : (
+                <>
+                  <strong>Retrieved number:</strong> {retrievedNumber}
+                  <br />
+                  <button onClick={onRetrieveNumber}>Retrieve</button>
+                </>
+              )}
             </li>
           </ul>
         </>
