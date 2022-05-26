@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useEthers } from '../hooks/useEthers';
+import { Ethers } from '../libs/Ethers';
 import { ConnectionStatus } from '../types/ProviderTypes';
 interface IProps {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ interface IProps {
   onNetworkChanged?: (networkId: string) => void;
   onConnect?: () => void;
   onDisconnect?: () => void;
+  onChangeAccount?: (newAddress: string) => void;
   options?: {
     showDebug?: boolean;
   };
@@ -18,6 +20,7 @@ export const EthersProvider: React.FC<IProps> = ({
   onNetworkChanged,
   onConnect,
   onDisconnect,
+  onChangeAccount,
   options = {
     showDebug: true,
   },
@@ -31,6 +34,9 @@ export const EthersProvider: React.FC<IProps> = ({
     if (onChangeConnectionStatus) {
       onChangeConnectionStatus(connectionStatus);
     }
+    if (onChangeAccount) {
+      onChangeAccount(Ethers.accounts[0]);
+    }
   }, [connectionStatus]);
 
   useEffect(() => {
@@ -43,7 +49,14 @@ export const EthersProvider: React.FC<IProps> = ({
         });
 
         window.ethereum.on('accountsChanged', async (accounts: string[]) => {
-          options.showDebug && console.log('accountsChanged', accounts);
+          if (options.showDebug) {
+            console.log('accountsChanged', accounts);
+          }
+          Ethers.accounts = accounts;
+
+          if (onChangeAccount) {
+            onChangeAccount(accounts[0]);
+          }
 
           await checkConnection(true);
         });

@@ -11,6 +11,7 @@ export const App: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState(
     ConnectionStatus.Disconnected
   );
+  const [currentAccount, setCurrentAccount] = useState<string>();
 
   const checkConnectionStatus = async () => {
     if (ethersProvider) {
@@ -41,6 +42,7 @@ export const App: React.FC = () => {
 
   return (
     <EthersProvider
+      onChangeAccount={newAcc => setCurrentAccount(newAcc)}
       onNetworkChanged={id => {
         const networkId = parseInt(id);
         console.log(
@@ -68,13 +70,23 @@ export const App: React.FC = () => {
       </ul>
 
       <h3>Environment</h3>
-      <p>
-        EtherJS initialized?{' '}
-        <strong>{ethersProvider?.isInitialized() ? 'true' : 'false'}</strong>
-      </p>
-      <p>
-        Connection status: <strong>{connectionStatus}</strong>
-      </p>
+
+      <ul>
+        <li>
+          <b>Metamask installed?</b>{' '}
+          {JSON.stringify(ethersProvider?.isInstalled() || false)}
+        </li>
+        <li>
+          <b>EtherJS initialized:</b>{' '}
+          {JSON.stringify(ethersProvider?.isInitialized() || false)}
+        </li>
+        <li>
+          <b>Connection status:</b> {connectionStatus}
+        </li>
+        <li>
+          <b>Current account:</b> {currentAccount}
+        </li>
+      </ul>
     </EthersProvider>
   );
 };

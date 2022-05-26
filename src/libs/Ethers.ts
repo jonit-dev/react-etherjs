@@ -6,7 +6,7 @@ import {
 } from '../types/ProviderTypes';
 export class Ethers implements IWalletProvider {
   public static provider: ethers.providers.Web3Provider | null = null;
-  public accounts: string[] = [];
+  public static accounts: string[] = [];
 
   public init(): Ethers | undefined {
     try {
@@ -38,6 +38,10 @@ export class Ethers implements IWalletProvider {
     return false;
   }
 
+  public getCurrentAccount(): string {
+    return Ethers.accounts?.[0];
+  }
+
   public async getConnectionStatus(): Promise<ConnectionStatus> {
     return (await this.isConnected())
       ? ConnectionStatus.Connected
@@ -54,6 +58,8 @@ export class Ethers implements IWalletProvider {
     if (!accounts || accounts.length === 0) {
       return false;
     }
+
+    Ethers.accounts = accounts;
 
     return accounts.length > 0;
   }
@@ -72,6 +78,8 @@ export class Ethers implements IWalletProvider {
         'Oops! Failed to load your Metamask accounts. Please, try again.'
       );
     }
+
+    Ethers.accounts = accounts;
 
     return accounts;
   }
