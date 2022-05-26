@@ -7,11 +7,14 @@ import {
 export class Ethers implements IWalletProvider {
   public static provider: ethers.providers.Web3Provider | null = null;
   public static accounts: string[] = [];
+  public static signer: ethers.Signer | null = null;
 
   public init(): Ethers | undefined {
     try {
       if (this.isInstalled()) {
         Ethers.provider = new ethers.providers.Web3Provider(window.ethereum);
+
+        Ethers.signer = Ethers.provider?.getSigner();
 
         return this;
       } else {
