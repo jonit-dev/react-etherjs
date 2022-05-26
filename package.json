@@ -36,6 +36,7 @@
   },
   "author": "Joao Paulo Furtado",
   "module": "dist/react-etherjs.esm.js",
+  "homepage": "https://github.com/jonit-dev/react-etherjs",
   "size-limit": [
     {
       "path": "dist/react-etherjs.cjs.production.min.js",
