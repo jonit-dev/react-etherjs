@@ -1,6 +1,2 @@
-import * as React from 'react';
-
-// Delete me
-export const Thing = () => {
-  return <div>This works</div>;
-};
+export * from './components/EthersProvider';
+export * from './hooks/useEthers';
