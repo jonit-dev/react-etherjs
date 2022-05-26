@@ -4,7 +4,7 @@
 
 - Setting up Remix with Ganache for local testing
   - Check this article: https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf
-- If you want just to test the lib, my advice is deploying the "Storage" smart contract to Ganache local client (you have to [download](https://trufflesuite.com/ganache/) it).
+- [Remix:](https://remix.ethereum.org/) If you want just to test the lib, my advice is deploying the "Storage" smart contract to Ganache local client (you have to [download](https://trufflesuite.com/ganache/) it first).
 
 ### Detailed example
 
