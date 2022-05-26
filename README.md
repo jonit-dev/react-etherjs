@@ -4,17 +4,17 @@ WIP Docs...
 
 Check our example folder for a detailed usage.
 
-## Setting up Remix with Ganache for local testing
+### Setting up Remix with Ganache for local testing
 
 Check this article: https://medium.com/@kacharlabhargav21/using-ganache-with-remix-and-metamask-446fe5748ccf
 
-## useEthers
+### useEthers
 
-## useContract
+### useContract
 
-## Troubleshooting
+### Troubleshooting
 
-### "call revert exception" when calling contract method
+#### "call revert exception" when calling contract method
 
 The error call revert exception means that:
 
