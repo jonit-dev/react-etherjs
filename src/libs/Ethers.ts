@@ -13,9 +13,7 @@ export class Ethers implements IWalletProvider {
     try {
       if (this.isInstalled()) {
         Ethers.provider = new ethers.providers.Web3Provider(window.ethereum);
-
         Ethers.signer = Ethers.provider?.getSigner();
-
         return this;
       } else {
         throw new Error(
@@ -39,6 +37,14 @@ export class Ethers implements IWalletProvider {
     }
 
     return false;
+  }
+
+  public getSigner(): ethers.Signer | null {
+    return Ethers.provider?.getSigner()!;
+  }
+
+  public getProvider(): ethers.providers.Web3Provider | null {
+    return Ethers.provider;
   }
 
   public getCurrentAccount(): string {
@@ -112,6 +118,19 @@ export class Ethers implements IWalletProvider {
         }
       }
     }
+  }
+
+  public async isTransactionComplete(
+    transactionHash: string
+  ): Promise<boolean> {
+    const txReceipt = await Ethers.provider?.getTransactionReceipt(
+      transactionHash
+    );
+    if (txReceipt?.blockNumber) {
+      return txReceipt !== undefined;
+    }
+
+    return false;
   }
 }
 

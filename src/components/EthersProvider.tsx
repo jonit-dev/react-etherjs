@@ -22,7 +22,7 @@ export const EthersProvider: React.FC<IProps> = ({
   onDisconnect,
   onChangeAccount,
   options = {
-    showDebug: true,
+    showDebug: false,
   },
 }) => {
   const [connectionStatus, setConnectionStatus] = useState(
