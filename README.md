@@ -8,9 +8,9 @@
 
 ### Detailed example
 
-Check our example folder for an in-depth usage.
+Check our example folder for an in-depth usage guide.
 
-## Main elements
+## Features
 
 ### EthersProvider.tsx
 
@@ -19,18 +19,18 @@ Check our example folder for an in-depth usage.
 
 ```
 <EthersProvider
-      onChangeAccount={newAcc => setCurrentAccount(newAcc)}
-      onNetworkChanged={id => {
-        const networkId = parseInt(id);
-        console.log(
-          'network changed',
-          networkId`
-        );
-      }}
-      onChangeConnectionStatus={status => setConnectionStatus(status)}
-      options={{ showDebug: true }}
-    >
-       ...Your app code here
+   onChangeAccount={newAcc => setCurrentAccount(newAcc)}
+   onNetworkChanged={id => {
+     const networkId = parseInt(id);
+     console.log(
+      'network changed',
+       networkId`
+      );
+   }}
+   onChangeConnectionStatus={status => setConnectionStatus(status)}
+   options={{ showDebug: true }}
+  >
+    ...Your app code here
 </EthersProvider>
 ```
 
@@ -45,7 +45,7 @@ const ethersProvider = useEthers();
 
 - **Available public methods (ethersProvider):**
   - **init()**
-    - This is triggered automatically once you call useEthers.
+    - This is triggered automatically once you call useEthers hook.
   - **isInitialized(): boolean**
     - Check if Ethers.JS provider is initialized or not.
   - **isInstalled(): boolean**
@@ -61,11 +61,11 @@ const ethersProvider = useEthers();
   - **async isConnected(): Promise<boolean>**
     - Check if metamask is properly connected.
   - **async connect(): Promise<void>**
-    - Trigger a metamask connect request.
+    - Trigger a metamask connection request.
   - **async getAccounts(): Promise<string[] | undefined>**
     - Get all user's account public addresses.
   - **public async changeNetwork( chainId: string, createParams: IChangeNetworkParam[])**
-    - Programmatically change the user's metamask network. Initially, it tries to switch for a existing network by using the chainId. If not found, it prompts the user to create it by using the createParams.
+    - Programmatically change the user's metamask network. Initially, it tries to switch for a existing network by using the chainId. If not found, it prompts the user to create it through createParams argument.
   - **async getNetwork(): Promise<number>**
     - Get your networkId.
 
@@ -79,9 +79,7 @@ const ethersProvider = useEthers();
 
 ```
 import storageABI from './contracts/storage.json';
-
 ...
-
   const storageContract = useContract(
     '0xd5A00b125b4edA2159874738f1be086ee56f5645',
     storageABI
