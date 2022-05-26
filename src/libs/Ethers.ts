@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { IWalletProvider } from '../types/ProviderTypes';
+import { ConnectionStatus, IWalletProvider } from '../types/ProviderTypes';
 export class Ethers implements IWalletProvider {
   public static provider: ethers.providers.Web3Provider | null = null;
   public accounts: string[] = [];
@@ -34,6 +34,12 @@ export class Ethers implements IWalletProvider {
     return false;
   }
 
+  public async getConnectionStatus(): Promise<ConnectionStatus> {
+    return (await this.isConnected())
+      ? ConnectionStatus.Connected
+      : ConnectionStatus.Disconnected;
+  }
+
   public async isConnected(): Promise<boolean> {
     if (!this.isInitialized() || !this.isInstalled()) {
       return false;
@@ -41,7 +47,7 @@ export class Ethers implements IWalletProvider {
 
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
-    if (!accounts) {
+    if (!accounts || accounts.length === 0) {
       return false;
     }
 
@@ -53,8 +59,6 @@ export class Ethers implements IWalletProvider {
       await this.getAccounts();
     }
   }
-
-  public async disconnect(): Promise<void> {}
 
   public async getAccounts(): Promise<string[] | undefined> {
     const accounts = await Ethers.provider?.send('eth_requestAccounts', []);

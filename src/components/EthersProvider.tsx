@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useEthers } from '../hooks/useEthers';
 import { ConnectionStatus } from '../types/ProviderTypes';
-
 interface IProps {
   children: React.ReactNode;
-  onChangeConnectionStatus: (status: ConnectionStatus) => void;
-  onError?: (message: string) => void;
+  onChangeConnectionStatus?: (status: ConnectionStatus) => void;
+  onNetworkChanged?: (networkId: string) => void;
+  onConnect?: () => void;
+  onDisconnect?: () => void;
+  options?: {
+    showDebug?: boolean;
+  };
 }
 
 export const EthersProvider: React.FC<IProps> = ({
   children,
   onChangeConnectionStatus,
-  onError,
+  onNetworkChanged,
+  onConnect,
+  onDisconnect,
+  options = {
+    showDebug: true,
+  },
 }) => {
   const [connectionStatus, setConnectionStatus] = useState(
     ConnectionStatus.Disconnected
@@ -19,36 +28,48 @@ export const EthersProvider: React.FC<IProps> = ({
   const ethersProvider = useEthers();
 
   useEffect(() => {
-    onChangeConnectionStatus(connectionStatus);
+    if (onChangeConnectionStatus) {
+      onChangeConnectionStatus(connectionStatus);
+    }
   }, [connectionStatus]);
 
   useEffect(() => {
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
-      checkConnection();
-    });
-    window.ethereum.on('connect', () => {
-      setConnectionStatus(ConnectionStatus.Connected);
-    });
-    window.ethereum.on('disconnect', () => {
-      setConnectionStatus(ConnectionStatus.Disconnected);
-    });
-  }, []);
-
-  useEffect(() => {
     if (ethersProvider) {
-      checkConnection();
+      try {
+        window.ethereum.on('chainChanged', (networkId: string) => {
+          if (onNetworkChanged) {
+            onNetworkChanged(networkId);
+          }
+        });
+
+        window.ethereum.on('accountsChanged', async (accounts: string[]) => {
+          options.showDebug && console.log('accountsChanged', accounts);
+
+          await checkConnection(true);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
+      checkConnection(false);
     }
   }, [ethersProvider]);
 
-  const checkConnection = async () => {
+  const checkConnection = async (propagateEvents: boolean) => {
     if (ethersProvider) {
       const connectionStatus = await ethersProvider.isConnected();
 
-      setConnectionStatus(
-        connectionStatus === true
-          ? ConnectionStatus.Connected
-          : ConnectionStatus.Disconnected
-      );
+      if (connectionStatus) {
+        setConnectionStatus(ConnectionStatus.Connected);
+        if (onConnect && propagateEvents) {
+          onConnect();
+        }
+      } else {
+        setConnectionStatus(ConnectionStatus.Disconnected);
+        if (onDisconnect && propagateEvents) {
+          onDisconnect();
+        }
+      }
     }
   };
 
