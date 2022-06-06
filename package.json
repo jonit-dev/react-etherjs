@@ -43,7 +43,7 @@
     "trailingComma": "es5"
   },
   "author": "Joao Paulo Furtado",
-  "module": "dist/react-etherjs.esm.js",
+  "module": "dist/react-ethersjs.esm.js",
   "homepage": "https://github.com/jonit-dev/react-etherjs",
   "bugs": {
     "url": "https://github.com/jonit-dev/react-etherjs/issues",
