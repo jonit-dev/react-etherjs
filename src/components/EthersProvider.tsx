@@ -54,6 +54,10 @@ export const EthersProvider: React.FC<IProps> = ({
           }
           Ethers.accounts = accounts;
 
+          if (!accounts && onChangeConnectionStatus) {
+            onChangeConnectionStatus(ConnectionStatus.Disconnected);
+          }
+
           if (onChangeAccount) {
             onChangeAccount(accounts[0]);
           }
